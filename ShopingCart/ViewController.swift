@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     }
 
     func request(){
-        Alamofire.request("http://apiv4.yangkeduo.com/v5/goods/58693878?pdduid=6085803692").responseJSON {[weak self] (response) in
+        Alamofire.request("http://apiv4.yangkeduo.com/v5/goods/58693903?pdduid=6085803692").responseJSON {[weak self] (response) in
 
             if let data = response.data {
                 let json = JSON(data: data)
@@ -43,6 +43,7 @@ class ViewController: UIViewController {
             }
             self?.cartView.viewModel.skuArray = (self?.skuArray)!
             self?.cartView.tableView.reloadData()
+            self?.cartView.show()
         }
     }
     
