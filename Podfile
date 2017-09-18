@@ -8,6 +8,7 @@ target 'ShopingCart' do
   # Pods for ShopingCart
  pod 'Alamofire', '~> 4.5.0'
  pod 'SwiftyJSON', '~> 3.1.4'
+ pod 'SDWebImage', '~> 4.1.0'
   target 'ShopingCartTests' do
     inherit! :search_paths
     # Pods for testing

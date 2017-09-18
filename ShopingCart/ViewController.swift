@@ -25,6 +25,14 @@ class ViewController: UIViewController {
         cartView.frame = view.bounds
         
         request()
+        
+        cartView.selectDoneAction = { (skuModel) in
+            if skuModel != nil {
+                print("选择成功")
+            }else{
+                print("选择失败")
+            }
+        }
     }
 
     func request(){
@@ -32,14 +40,13 @@ class ViewController: UIViewController {
 
             if let data = response.data {
                 let json = JSON(data: data)
-                print("json: \(json)")
                 json["sku"].arrayValue.forEach({ (skuJson) in
                     self?.skuArray.append(SKUModel(json: skuJson))
                 })
                 
             }
-            print(self?.skuArray)
-            self?.cartView.model.skuArray = (self?.skuArray)!
+            self?.cartView.viewModel.skuArray = (self?.skuArray)!
+            self?.cartView.tableView.reloadData()
         }
     }
     

@@ -9,255 +9,62 @@
 import UIKit
 let XSpace: CGFloat = 10
 
-class ShopingCartViewHeader: UITableViewCell {
-    var goodsImageView: UIImageView = UIImageView()
-    var priceLabel: UILabel = UILabel()
-    var selectLabel: UILabel = UILabel()
-    var closeButton: UIButton = UIButton()
-    
-    var slectModel: SKUModel!{
-        didSet {
-            goodsImageView.image = UIImage.init(named: model.thumb_url)
-            priceLabel.text = "￥\(model.price)"
-            var selectText = "已选择："
-            model.specs.forEach { (spec) in
-                selectText.append(spec.spec_value + " ")
-            }
-            selectLabel.text = selectText
-        }
-    }
-    
-    var model: SKUModel!{
-        didSet{
+typealias shopCartViewDoneAction = (SKUModel?) -> Void
 
-            if model != nil {
-                //            imageView.image = UIImage.init(named: model.thumb_url)
-                priceLabel.text = "￥\(model.price)"
-                var selectText = "请选择："
-                model.specs.forEach { (spec) in
-                    selectText.append(spec.spec_key + " ")
-                }
-                selectLabel.text = selectText
-            }
-        }
-    }
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(goodsImageView)
-        contentView.addSubview(priceLabel)
-        contentView.addSubview(selectLabel)
-        contentView.addSubview(closeButton)
-        
-        selectLabel.text = "请选择：颜色 尺码"
-        
-        priceLabel.font = UIFont.systemFont(ofSize: 14)
-        selectLabel.font = UIFont.systemFont(ofSize: 12)
-        
-        priceLabel.textColor = UIColor.red
-        
-        closeButton.setTitle("关闭", for: UIControlState.normal)
-    }
-    
-
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        let imageViewWidth = contentView.frame.size.height - 2 * XSpace
-        goodsImageView.frame = CGRect(x: XSpace, y: XSpace, width: imageViewWidth, height: imageViewWidth)
-        priceLabel.frame = CGRect(x: goodsImageView.right + XSpace, y: goodsImageView.y + XSpace, width: 150, height: 18)
-        selectLabel.frame = CGRect(x: goodsImageView.right + XSpace, y: priceLabel.bottom + XSpace, width: 150, height: 16)
-        closeButton.frame = CGRect(x: contentView.width - XSpace - 30, y: XSpace, width: 30, height: 30)
-        
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-}
-
-class CountView: UIView {
-    var reduceButton: UIButton = UIButton()
-    var countLabel: UILabel = UILabel()
-    var plusButton: UIButton = UIButton()
-    
-    var maxCount = 9
-    var count: Int = 1 {
-        didSet{
-            countLabel.text = "\(count)"
-            if count <= 1{
-                reduceButton.isEnabled = false
-            }else{
-                reduceButton.isEnabled = true
-            }
-            
-            if count >= maxCount{
-                plusButton.isEnabled = false
-            }else{
-                plusButton.isEnabled = true
-            }
-            
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.addSubview(reduceButton)
-        self.addSubview(countLabel)
-        self.addSubview(plusButton)
-        
-        reduceButton.setImage(UIImage.init(named: "button_reduce"), for: UIControlState.normal)
-        reduceButton.setImage(UIImage.init(named: "button_reduce_disable"), for: UIControlState.disabled)
-        
-        plusButton.setImage(UIImage.init(named: "button_plus"), for: UIControlState.normal)
-        plusButton.setImage(UIImage.init(named: "button_plus_disable"), for: UIControlState.disabled)
-        
-        countLabel.backgroundColor = UIColor.lightGray
-        reduceButton.backgroundColor = UIColor.lightGray
-        plusButton.backgroundColor = UIColor.lightGray
-        
-        reduceButton.addTarget(self, action: #selector(reduce), for: UIControlEvents.touchUpInside)
-        plusButton.addTarget(self, action: #selector(plus), for: UIControlEvents.touchUpInside)
-        
-        countLabel.textAlignment = .center
-        
-        countLabel.text = "1"
-        
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        reduceButton.frame = CGRect(x: 0, y: 0, width: self.height, height: self.height)
-        plusButton.frame = CGRect(x: self.width - self.height, y: 0, width: self.height, height: self.height)
-        countLabel.frame = CGRect(x: reduceButton.right + 2, y: 0, width: self.width - 2 * self.height - 4, height: self.height)
-    }
-    
-    @objc func reduce(){
-        count -= 1
-    }
-    @objc func plus(){
-        count += 1
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-}
-
-
-class ShopingCartViewBottom: UITableViewCell {
-    var tipLabel: UILabel = UILabel()
-    var countView: CountView = CountView()
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(tipLabel)
-        contentView.addSubview(countView)
-        
-        tipLabel.font = UIFont.systemFont(ofSize: 14)
-        tipLabel.text = "数量"
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        tipLabel.frame = CGRect(x: XSpace, y: 0, width: 100, height: 16)
-        tipLabel.centerY = contentView.height/2
-        
-        countView.frame = CGRect(x: contentView.width - 120 - XSpace, y: 0, width: 120, height: 26)
-        countView.centerY = tipLabel.centerY
-        
-    }
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-}
-
-class ShopingCartViewCell: UITableViewCell {
-    var tipLabel: UILabel = UILabel()
-    
-    var model: SpecKeyVaules!{
-        didSet{
-            tipLabel.text = model.key
-            var index = 10000
-            Array(model.vaules).forEach { (content) in
-                let label = UILabel()
-                label.font = UIFont.systemFont(ofSize: 14)
-                label.backgroundColor = UIColor.gray
-                label.text = content
-                contentView.addSubview(label)
-                label.tag = index
-                index += 1
-            }
-        }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        tipLabel.frame = CGRect(x: XSpace, y: XSpace, width: 100, height: 16)
-        let maxX = self.width - XSpace * 2
-        var minY = tipLabel.bottom + XSpace
-        var minX = XSpace
-        contentView.subviews.forEach { (view) in
-            if let label = view as? UILabel, let width = label.text?.stringWidth(fontSize: 14){
-                label.frame = CGRect(x: minX, y: minY, width: width, height: 28)
-                minX = label.right + XSpace + 2
-                if minX >= maxX {
-                    minY = label.bottom + XSpace
-                    minX = XSpace
-                }
-            }
-        }
-    }
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(tipLabel)
-        tipLabel.font = UIFont.systemFont(ofSize: 14)
-        tipLabel.tag = 1000
-        
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class ShopingCartView: UIView,UITableViewDelegate,UITableViewDataSource {
-    
+class ShopingCartView: UIView {
+    //MARK: - property
     var tableView: UITableView!
-    var model: ShopingCartViewModel = ShopingCartViewModel(){
-        didSet{
-            tableView.reloadData()
-        }
-    }
+    var doneButton: UIButton!
     
+    var selectDoneAction: shopCartViewDoneAction?
+    
+    var viewModel: ShopingCartViewModel = ShopingCartViewModel()
+    
+    //MARK: - life
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.init(white: 0.5, alpha: 0.5)
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ShopingCartViewHeader.classForCoder(), forCellReuseIdentifier: "header")
+        tableView.separatorStyle = .none
+        tableView.register(ShopingCartViewHeaderCell.classForCoder(), forCellReuseIdentifier: "header")
         tableView.register(ShopingCartViewCell.classForCoder(), forCellReuseIdentifier: "cell")
-        tableView.register(ShopingCartViewBottom.classForCoder(), forCellReuseIdentifier: "header")
+        tableView.register(ShopingCartViewBottomCell.classForCoder(), forCellReuseIdentifier: "bottom")
         self.addSubview(tableView)
         
+        doneButton = UIButton()
+        self.addSubview(doneButton)
+        doneButton.setTitle("确定", for: UIControlState.normal)
+        doneButton.backgroundColor = UIColor.red
+        doneButton.addTarget(self, action: #selector(doneButtonAction), for: UIControlEvents.touchUpInside)
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        tableView.frame = CGRect(x: 0, y: self.height/3, width: self.width, height: self.height*2/3)
+        doneButton.frame = CGRect(x: 0, y: self.height - 50, width: self.width, height: 50)
+        tableView.frame = CGRect(x: 0, y: self.height/3, width: self.width, height: self.height*2/3  - doneButton.height)
+        
+    }
+    
+    //MARK: - private method
+    @objc func doneButtonAction(){
+        selectDoneAction?(viewModel.selectSkuModel)
     }
     
     //计算第一行minY 到 最后一行 MaxY 之间的差值
-    func height(contentString strings: [String]) -> CGFloat{
+    func height(contentItem items: [SpecItem]) -> CGFloat{
         
         let maxX: CGFloat = self.width - XSpace * 2
         var minY: CGFloat = 0
         var minX: CGFloat = XSpace
-        strings.forEach { (content) in
-            let width = content.stringWidth(fontSize: 14)
+        items.forEach { (item) in
+            let width = item.content.stringWidthWithSpace(fontSize: 14)
             minX = minX + width + XSpace + 2
             if minX >= maxX {
                 minY = minY + 28 + XSpace
@@ -267,24 +74,107 @@ class ShopingCartView: UIView,UITableViewDelegate,UITableViewDataSource {
         return minY + 28
         
     }
+
+    func updateShopingCartViewCellData(tip: String, title: String){
+
+        for i in 0..<viewModel.mySpecs.count {
+            let specs = viewModel.mySpecs[i]
+            if specs.key == tip {
+                for j in 0..<specs.vaules.count {
+                    let item = specs.vaules[j]
+                    if item.content == title{
+                        viewModel.mySpecs[i].vaules[j].isSelected = true
+                    }else{
+                        viewModel.mySpecs[i].vaules[j].isSelected = false
+                    }
+                }
+            }
+        }
+    }
     
+    /// 筛选已选样式的数据
+    ///
+    /// - Returns: ShopingCartViewHeaderCellModel
+    func headerViewData()  -> ShopingCartViewHeaderCellModel?{
+       
+        var selectedKeyValue = [String: String]()
+        //筛选出已选的样式选项
+        viewModel.mySpecs.forEach { (specs) in
+            specs.vaules.forEach({ (item) in
+                if item.isSelected == true {
+                    selectedKeyValue[specs.key] = item.content
+                }
+            })
+        }
+        
+        guard let selectedSpec = selectedKeyValue.first else{
+            return nil
+        }
+        
+        var skuModel: SKUModel?
+        viewModel.skuArray.forEach { (model) in
+            model.specs.forEach({ (spec) in
+                if spec.spec_key == selectedSpec.key, spec.spec_value == selectedSpec.value {
+                    skuModel = model
+                }
+            })
+        }
+        
+        guard let model = skuModel else {
+            return nil
+        }
+        
+        if model.specs.count == selectedKeyValue.count{
+            viewModel.selectSkuModel = model
+        }
+        
+        var content: String = ""
+        selectedKeyValue.forEach { (keyValue) in
+            content.append(keyValue.value + " ")
+            
+        }
+        return ShopingCartViewHeaderCellModel(thumbUrl: model.thumb_url, price: model.group_price, content: content)
+    }
+    
+    func lowAndHightPriceModel() -> (SKUModel?, SKUModel?){
+        guard let first = viewModel.skuArray.first else {
+            return (nil, nil)
+        }
+        
+        var low: SKUModel = first
+        var high: SKUModel  = first
+        viewModel.skuArray.forEach { (model) in
+            if model.group_price > high.group_price {
+                high = model
+            }
+            
+            if model.group_price < low.group_price {
+                low = model
+            }
+        }
+        return (low, high)
+    }
+
+}
+ //MARK: - UITableViewDelegate,UITableViewDataSource
+extension ShopingCartView: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
         case 0:
             return 112
-        case model.mySpecs.count:
+        case viewModel.mySpecs.count + 1:
             return 55
         default:
-            if model.mySpecs.count > indexPath.row - 1 {
-                 return 34 + height(contentString: Array(model.mySpecs[indexPath.row - 1].vaules)) + XSpace
+            if viewModel.mySpecs.count > indexPath.row - 1 {
+                return 34 + height(contentItem: Array(viewModel.mySpecs[indexPath.row - 1].vaules)) + 2*XSpace
             }
             return 0
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if model.mySpecs.count > 0{
-            return model.mySpecs.count + 2
+        if viewModel.mySpecs.count > 0{
+            return viewModel.mySpecs.count + 2
         }
         return 0
     }
@@ -292,79 +182,40 @@ class ShopingCartView: UIView,UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
         case 0:
-            guard let cell: ShopingCartViewHeader = tableView.dequeueReusableCell(withIdentifier: "header") as? ShopingCartViewHeader else {
-                return ShopingCartViewHeader()
+            guard let cell: ShopingCartViewHeaderCell = tableView.dequeueReusableCell(withIdentifier: "header") as? ShopingCartViewHeaderCell else {
+                return ShopingCartViewHeaderCell()
             }
-            cell.model = model.skuArray.first
+            //是否有选择颜色尺码等，有就直接加载已选数据，否则加载默认数据
+            if let model = headerViewData() {
+                cell.viewModel = model
+            }else {
+                let (low, high) = lowAndHightPriceModel()
+                if let lowModel = low, let hightModel = high {
+                    cell.priceModel(low: lowModel, high: hightModel)
+                }
+            }
+            
             return cell
-        case model.mySpecs.count:
-            guard let cell: ShopingCartViewBottom = tableView.dequeueReusableCell(withIdentifier: "bottom") as? ShopingCartViewBottom else {
-                return ShopingCartViewBottom()
+        case viewModel.mySpecs.count + 1 :
+            guard let cell: ShopingCartViewBottomCell = tableView.dequeueReusableCell(withIdentifier: "bottom") as? ShopingCartViewBottomCell else {
+                return ShopingCartViewBottomCell()
             }
             return cell
         default:
             guard let cell: ShopingCartViewCell = tableView.dequeueReusableCell(withIdentifier: "cell") as? ShopingCartViewCell else {
                 return ShopingCartViewCell()
             }
-            if model.mySpecs.count > indexPath.row - 1 {
-                cell.model = model.mySpecs[indexPath.row - 1]
+            if viewModel.mySpecs.count > indexPath.row - 1 {
+                cell.model = viewModel.mySpecs[indexPath.row - 1]
             }
-            
+            cell.buttonTapAction = { [weak self] (tip,title) in
+                print(tip + " " + title)
+                self?.updateShopingCartViewCellData(tip: tip, title: title)
+                self?.tableView.reloadData()
+            }
             return cell
         }
-        
-
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-
 }
 
 
-struct SpecKeyVaules {
-    var key: String
-    var vaules: Set<String>
-}
-struct ShopingCartViewModel{
-    var selectGoodsCount = 1
-    var mySpecs: [SpecKeyVaules] = [SpecKeyVaules]()
-    var skuArray: [SKUModel] = [SKUModel](){
-        didSet{
-            dealData()
-        }
-    }
-    
-    mutating func dealData(){
-        skuArray.forEach { (sku) in
-            sku.specs.forEach({ (spec) in
-                print("key: \(spec.spec_key) , value: \(spec.spec_value)")
-                var index = -1
-                for i in 0..<mySpecs.count {
-                    if mySpecs[i].key == spec.spec_key {
-                        index = i
-                        break
-                    }
-                }
-                
-                if index >= 0 {
-                    mySpecs[index].vaules.insert(spec.spec_value)
-                }else{
-                    var set = Set<String>()
-                    set.insert(spec.spec_value)
-                    mySpecs.append(SpecKeyVaules(key: spec.spec_key, vaules: set))
-                }
-            })
-        }
-        print(mySpecs)
-    }
-}
-extension String {
-    func stringWidth(fontSize: CGFloat, height: CGFloat = 15) -> CGFloat {
-        let font = UIFont.systemFont(ofSize: fontSize)
-        let rect = NSString(string: self).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: height), options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
-        return ceil(rect.width)
-    }
-}
