@@ -17,15 +17,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        var color:Set<String> = Set<String>()
-        color.insert("黄色")
-        color.insert("蓝色")
-        color.insert("黄色")
         view.addSubview(cartView)
+        view.sendSubview(toBack: cartView)
         cartView.frame = view.bounds
-        
-        request()
-        
         cartView.selectDoneAction = { (skuModel) in
             if skuModel != nil {
                 print("选择成功")
@@ -33,6 +27,8 @@ class ViewController: UIViewController {
                 print("选择失败")
             }
         }
+        
+        request()
     }
 
     func request(){
@@ -50,11 +46,14 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func show(_ sender: Any) {
+        
+        cartView.show()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 

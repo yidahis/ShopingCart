@@ -9,6 +9,8 @@
 import UIKit
 import SDWebImage
 
+typealias NoneArgmentAction = () -> Void
+
 struct ShopingCartViewHeaderCellModel {
     var thumbUrl: String
     var price: Int
@@ -21,6 +23,8 @@ class ShopingCartViewHeaderCell: UITableViewCell {
     var priceLabel: UILabel = UILabel()
     var selectLabel: UILabel = UILabel()
     var closeButton: UIButton = UIButton()
+    
+    var clossButtonActionBlock: NoneArgmentAction?
     
     var viewModel: ShopingCartViewHeaderCellModel!{
         didSet {
@@ -56,16 +60,21 @@ class ShopingCartViewHeaderCell: UITableViewCell {
         
         selectLabel.text = "请选择：颜色 尺码"
         
-        priceLabel.font = UIFont.systemFont(ofSize: 14)
+        priceLabel.font = UIFont.systemFont(ofSize: 16)
         selectLabel.font = UIFont.systemFont(ofSize: 12)
         
         priceLabel.textColor = UIColor.red
         
         closeButton.setTitle("关闭", for: UIControlState.normal)
+        closeButton.setImage(UIImage(named: "button_close"), for: UIControlState.normal)
+        closeButton.addTarget(self, action: #selector(closeAction), for: UIControlEvents.touchUpInside)
         
         lineView.backgroundColor = UIColor.groupTableViewBackground
     }
     
+    @objc func closeAction(){
+        clossButtonActionBlock?()
+    }
     
     
     override func layoutSubviews() {

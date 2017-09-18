@@ -15,15 +15,16 @@ class ShopingCartView: UIView {
     //MARK: - property
     var tableView: UITableView!
     var doneButton: UIButton!
-    
+    let doneButtonHeight: CGFloat = 50
     var selectDoneAction: shopCartViewDoneAction?
+    var closeActionBlock: NoneArgmentAction?
     
     var viewModel: ShopingCartViewModel = ShopingCartViewModel()
     
     //MARK: - life
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.init(white: 0.5, alpha: 0.5)
+        
         tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -31,6 +32,7 @@ class ShopingCartView: UIView {
         tableView.register(ShopingCartViewHeaderCell.classForCoder(), forCellReuseIdentifier: "header")
         tableView.register(ShopingCartViewCell.classForCoder(), forCellReuseIdentifier: "cell")
         tableView.register(ShopingCartViewBottomCell.classForCoder(), forCellReuseIdentifier: "bottom")
+        tableView.layoutMargins = UIEdgeInsets.zero
         self.addSubview(tableView)
         
         doneButton = UIButton()
@@ -47,14 +49,37 @@ class ShopingCartView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        doneButton.frame = CGRect(x: 0, y: self.height - 50, width: self.width, height: 50)
-        tableView.frame = CGRect(x: 0, y: self.height/3, width: self.width, height: self.height*2/3  - doneButton.height)
-        
+
+        tableView.frame = CGRect(x: 0, y: self.height, width: self.width, height: self.height*2/3  - self.doneButtonHeight)
+        doneButton.frame = CGRect(x: 0, y: tableView.bottom, width: self.width, height: self.doneButtonHeight)
+
+    }
+    
+    func show() {
+        self.superview?.bringSubview(toFront: self)
+        UIView.animate(withDuration: 0.25, delay: 0.25, options: .curveEaseIn, animations: {
+            self.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+            self.tableView.frame = CGRect(x: 0, y: self.height/3, width: self.width, height: self.height*2/3  - self.doneButtonHeight)
+            self.doneButton.frame = CGRect(x: 0, y: self.tableView.bottom, width: self.width, height: self.doneButtonHeight)
+        }) { (finished) in
+            
+        }
     }
     
     //MARK: - private method
     @objc func doneButtonAction(){
         selectDoneAction?(viewModel.selectSkuModel)
+    }
+    
+    func close(){
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseIn, animations: {
+            self.backgroundColor = UIColor(white: 0, alpha: 0)
+            self.tableView.frame = CGRect(x: 0, y: self.height, width: self.width, height: self.height*2/3  - self.doneButtonHeight)
+            self.doneButton.frame = CGRect(x: 0, y: self.tableView.bottom, width: self.width, height: self.doneButtonHeight)
+        }) { (finished) in
+            self.superview?.sendSubview(toBack: self)
+        }
     }
     
     //计算第一行minY 到 最后一行 MaxY 之间的差值
@@ -193,6 +218,10 @@ extension ShopingCartView: UITableViewDelegate,UITableViewDataSource{
                 if let lowModel = low, let hightModel = high {
                     cell.priceModel(low: lowModel, high: hightModel)
                 }
+            }
+            
+            cell.clossButtonActionBlock = { [weak self] in
+               self?.close()
             }
             
             return cell
