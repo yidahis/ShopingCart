@@ -18,8 +18,10 @@ class ShopingCartView: UIView {
     let doneButtonHeight: CGFloat = 50
     var selectDoneAction: shopCartViewDoneAction?
     var closeActionBlock: NoneArgmentAction?
+    var isShowing: Bool = false
     
     var viewModel: ShopingCartViewModel = ShopingCartViewModel()
+    
     
     //MARK: - life
     override init(frame: CGRect) {
@@ -41,6 +43,15 @@ class ShopingCartView: UIView {
         doneButton.backgroundColor = UIColor.red
         doneButton.addTarget(self, action: #selector(doneButtonAction), for: UIControlEvents.touchUpInside)
         
+        tableView.addObserver(self, forKeyPath: "frame", options: .new, context: nil)
+        
+
+        
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        print("keypath: " + keyPath!)
+        print(change)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -49,13 +60,21 @@ class ShopingCartView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        if isShowing {
+            self.tableView.frame = CGRect(x: 0, y: self.height/3, width: self.width, height: self.height*2/3  - self.doneButtonHeight)
+            self.doneButton.frame = CGRect(x: 0, y: self.tableView.bottom, width: self.width, height: self.doneButtonHeight)
+        }else{
+            tableView.frame = CGRect(x: 0, y: self.height, width: self.width, height: self.height*2/3  - self.doneButtonHeight)
+            doneButton.frame = CGRect(x: 0, y: tableView.bottom, width: self.width, height: self.doneButtonHeight)
+        }
 
-        tableView.frame = CGRect(x: 0, y: self.height, width: self.width, height: self.height*2/3  - self.doneButtonHeight)
-        doneButton.frame = CGRect(x: 0, y: tableView.bottom, width: self.width, height: self.doneButtonHeight)
+   
 
     }
     
     func show() {
+        isShowing = true
         self.superview?.bringSubview(toFront: self)
         UIView.animate(withDuration: 0.25, delay: 0.25, options: .curveEaseIn, animations: {
             self.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
@@ -72,7 +91,7 @@ class ShopingCartView: UIView {
     }
     
     func close(){
-        
+        isShowing = false
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseIn, animations: {
             self.backgroundColor = UIColor(white: 0, alpha: 0)
             self.tableView.frame = CGRect(x: 0, y: self.height, width: self.width, height: self.height*2/3  - self.doneButtonHeight)

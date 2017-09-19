@@ -70,6 +70,7 @@ class ShopingCartViewHeaderCell: UITableViewCell {
         closeButton.addTarget(self, action: #selector(closeAction), for: UIControlEvents.touchUpInside)
         
         lineView.backgroundColor = UIColor.groupTableViewBackground
+        goodsImageView.setupForImageViewer()
     }
     
     @objc func closeAction(){

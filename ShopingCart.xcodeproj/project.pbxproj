@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5A38FC071F6FD38A00524E6C /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A38FC061F6FD38A00524E6C /* StringExtension.swift */; };
+		5A38FC2F1F70B43D00524E6C /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A38FC2D1F70B43D00524E6C /* ImageViewer.swift */; };
+		5A38FC301F70B43D00524E6C /* UIImageView+ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A38FC2E1F70B43D00524E6C /* UIImageView+ImageViewer.swift */; };
 		5A8D00151F6BA75F00FA4E36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8D00141F6BA75F00FA4E36 /* AppDelegate.swift */; };
 		5A8D00171F6BA75F00FA4E36 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8D00161F6BA75F00FA4E36 /* ViewController.swift */; };
 		5A8D001A1F6BA75F00FA4E36 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A8D00181F6BA75F00FA4E36 /* Main.storyboard */; };
@@ -52,6 +54,8 @@
 		40BF5CEED076D57C7F90FBDA /* Pods-ShopingCart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopingCart.release.xcconfig"; path = "Pods/Target Support Files/Pods-ShopingCart/Pods-ShopingCart.release.xcconfig"; sourceTree = "<group>"; };
 		4C9722AE3D7C201D9DF17BC0 /* Pods-ShopingCart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShopingCart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ShopingCart/Pods-ShopingCart.debug.xcconfig"; sourceTree = "<group>"; };
 		5A38FC061F6FD38A00524E6C /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		5A38FC2D1F70B43D00524E6C /* ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
+		5A38FC2E1F70B43D00524E6C /* UIImageView+ImageViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+ImageViewer.swift"; sourceTree = "<group>"; };
 		5A8D00111F6BA75F00FA4E36 /* ShopingCart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShopingCart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A8D00141F6BA75F00FA4E36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5A8D00161F6BA75F00FA4E36 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +124,15 @@
 			name = ShopingCartView;
 			sourceTree = "<group>";
 		};
+		5A38FC2C1F70B43D00524E6C /* ImageViewer */ = {
+			isa = PBXGroup;
+			children = (
+				5A38FC2D1F70B43D00524E6C /* ImageViewer.swift */,
+				5A38FC2E1F70B43D00524E6C /* UIImageView+ImageViewer.swift */,
+			);
+			path = ImageViewer;
+			sourceTree = "<group>";
+		};
 		5A8D00081F6BA75F00FA4E36 = {
 			isa = PBXGroup;
 			children = (
@@ -147,6 +160,7 @@
 			children = (
 				5A8D00141F6BA75F00FA4E36 /* AppDelegate.swift */,
 				5A8D00161F6BA75F00FA4E36 /* ViewController.swift */,
+				5A38FC2C1F70B43D00524E6C /* ImageViewer */,
 				5A38FC081F6FD6E800524E6C /* ShopingCartView */,
 				5AEB2D5D1F6BDF1D0099E709 /* UIViewExtension.swift */,
 				5A38FC061F6FD38A00524E6C /* StringExtension.swift */,
@@ -481,6 +495,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A38FC301F70B43D00524E6C /* UIImageView+ImageViewer.swift in Sources */,
 				5AEBCC031F6F5ECF00486835 /* ShopingCartViewBottomCell.swift in Sources */,
 				5AEBCBFF1F6F5E8A00486835 /* ShopingCartViewHeaderCell.swift in Sources */,
 				5AEBCC011F6F5EB200486835 /* CountView.swift in Sources */,
@@ -490,6 +505,7 @@
 				5AEB2D5C1F6BB0FE0099E709 /* SKUModel.swift in Sources */,
 				5AEBCC071F6F5F1700486835 /* ShopingCartViewModel.swift in Sources */,
 				5A8D00431F6BA99600FA4E36 /* ShopingCartView.swift in Sources */,
+				5A38FC2F1F70B43D00524E6C /* ImageViewer.swift in Sources */,
 				5A38FC071F6FD38A00524E6C /* StringExtension.swift in Sources */,
 				5A8D00151F6BA75F00FA4E36 /* AppDelegate.swift in Sources */,
 			);
