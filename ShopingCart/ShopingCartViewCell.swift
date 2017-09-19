@@ -62,17 +62,18 @@ class ShopingCartViewCell: UITableViewCell {
         super.layoutSubviews()
         tipLabel.frame = CGRect(x: XSpace, y: XSpace, width: 100, height: 16)
         lineView.frame = CGRect(x: 0, y: contentView.height - 1, width: contentView.width, height: 1)
-        let maxX = self.width - XSpace * 2
+        let maxX = self.width - XSpace
         var minY = tipLabel.bottom + XSpace
         var minX = XSpace
         contentView.subviews.forEach { (view) in
             if let button = view as? UIButton, let width = button.titleLabel?.text?.stringWidthWithSpace(fontSize: 14){
-                button.frame = CGRect(x: minX, y: minY, width: width, height: 28)
-                minX = button.right + XSpace + 2
-                if minX >= maxX {
-                    minY = button.bottom + XSpace
+                if minX + width + XSpace  > maxX {
                     minX = XSpace
+                    minY = minY + 28 + XSpace
                 }
+                
+                button.frame = CGRect(x: minX, y: minY, width: width, height: 28)
+                minX = button.right + XSpace
             }
         }
     }
